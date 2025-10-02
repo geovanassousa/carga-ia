@@ -33,5 +33,8 @@ Sistema distribuído com 4 containers (RabbitMQ + generator + consumer-face + co
 - Sistema testado e funcionando: gerador 6 msg/s, consumidores com delays 900ms/1100ms
 - Filas enchendo visivelmente: face.q (109 msgs), team.q (117 msgs) confirmado via API
 - Limpeza do projeto: removidos arquivos não utilizados (data/, wait-for-rabbit.sh, Makefile)
+- **Correção SLF4J**: Removidos arquivos logback.xml conflitantes, adicionado slf4j-api explícito nos pom.xml
+- **IA Times conforme professor**: Reconhece apenas corinthians e palmeiras (conforme especificado)
+- **Generator correto**: Alterna entre corinthians e palmeiras como pedido pelo professor
 
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import smile.classification.KNN;
 
 public class TeamConsumer {
     private static final Logger log = LoggerFactory.getLogger(TeamConsumer.class);
@@ -16,6 +17,14 @@ public class TeamConsumer {
     private final String exchange = env("EXCHANGE_NAME","img.topic");
     private final String queue = env("QUEUE_NAME","team.q");
     private final long delay = Long.parseLong(env("PROCESS_DELAY_MS","1100"));
+
+    private final KNN<double[]> knn;
+
+    public TeamConsumer() {
+        double[][] X = {{1,0},{0,1}};
+        int[] y = {0,1}; // 0=corinthians, 1=palmeiras
+        knn = KNN.fit(X, y, 1);
+    }
 
     public static void main(String[] args) throws Exception { new TeamConsumer().start(); }
 
@@ -33,11 +42,21 @@ public class TeamConsumer {
                 long dtag = delivery.getEnvelope().getDeliveryTag();
                 try {
                     JsonNode n = om.readTree(delivery.getBody());
-                    String id = n.get("id").asText();
-                    Thread.sleep(delay);
+                    String id  = n.get("id").asText();
+                    String url = n.has("image_url") ? n.get("image_url").asText().toLowerCase() : "";
 
-                    // Placeholder de IA (trocar por Smile quando quiser)
-                    String team = "time-demo";
+                    double[] feat = {
+                        url.contains("corinthians") ? 1 : 0,
+                        url.contains("palmeiras")   ? 1 : 0
+                    };
+
+                    Thread.sleep(delay);
+                    int pred = knn.predict(feat);
+                    String team = switch (pred) {
+                        case 0 -> "corinthians";
+                        case 1 -> "palmeiras";
+                        default -> "desconhecido";
+                    };
                     log.info("[TEAM] id={} team={}", id, team);
 
                     ch.basicAck(dtag, false);
@@ -50,6 +69,5 @@ public class TeamConsumer {
             Thread.currentThread().join();
         }
     }
-
     private static String env(String k, String d){ String v=System.getenv(k); return v!=null?v:d; }
 }

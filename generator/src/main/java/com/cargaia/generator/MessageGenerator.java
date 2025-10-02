@@ -33,24 +33,35 @@ public class MessageGenerator {
             long interval = Math.max(1, 1000L / msgsPerSec);
             AMQP.BasicProperties props = new AMQP.BasicProperties.Builder()
                     .contentType("application/json").build();
-            boolean toggle = false;
 
+            boolean toggle = false;
+            boolean teamToggle = false;
+            
             log.info("Gerador ON | {} msg/s | exchange={}", msgsPerSec, exchange);
             while (true) {
                 String type = (toggle = !toggle) ? "face" : "team";
+                String imageUrl;
+                if (type.equals("face")) {
+                    imageUrl = "https://example.com/face-happy.jpg";
+                } else {
+                    // Team: alterna entre corinthians e palmeiras (como pedido pelo professor)
+                    teamToggle = !teamToggle;
+                    imageUrl = teamToggle 
+                        ? "https://example.com/team-corinthians.png"
+                        : "https://example.com/team-palmeiras.png";
+                }
+                
                 Message m = new Message(
                         UUID.randomUUID().toString(),
                         type,
-                        type.equals("face") ? "https://example.com/face.jpg" : "https://example.com/team.png",
+                        imageUrl,
                         Instant.now().toString(),
                         new MessageMeta("generator-1","demo")
                 );
                 ch.basicPublish(exchange, type, props, om.writeValueAsBytes(m));
-                log.info("Publicado {} -> {}", m.getId(), type);
                 Thread.sleep(interval);
             }
         }
     }
-
     private static String env(String k, String d){ String v=System.getenv(k); return v!=null?v:d; }
 }
