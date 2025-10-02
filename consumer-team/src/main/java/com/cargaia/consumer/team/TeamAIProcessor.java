@@ -1,6 +1,7 @@
 package com.cargaia.consumer.team;
 
-import smile.classification.KNN;
+// Smile imports commented out due to availability issues
+// import smile.classification.KNN;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,8 @@ import java.util.Random;
 public class TeamAIProcessor {
     private static final Logger logger = LoggerFactory.getLogger(TeamAIProcessor.class);
     
-    private KNN<double[], String> model;
+    // Smile model commented out due to availability issues
+    // private KNN<double[], String> model;
     private boolean useSmile = false;
     private Random random = new Random();
     
@@ -45,13 +47,13 @@ public class TeamAIProcessor {
     }
 
     public String processTeam(String imageUrl) {
-        if (useSmile && model != null) {
-            return processWithSmile(imageUrl);
-        } else {
-            return processWithPlaceholder(imageUrl);
-        }
+        // Smile temporarily disabled due to availability issues
+        // Always use placeholder for now
+        return processWithPlaceholder(imageUrl);
     }
 
+    // Smile processing commented out due to availability issues
+    /*
     private String processWithSmile(String imageUrl) {
         try {
             // Simula extração de features da imagem
@@ -68,6 +70,7 @@ public class TeamAIProcessor {
             return processWithPlaceholder(imageUrl);
         }
     }
+    */
 
     private String processWithPlaceholder(String imageUrl) {
         // Placeholder determinístico baseado no hash da URL

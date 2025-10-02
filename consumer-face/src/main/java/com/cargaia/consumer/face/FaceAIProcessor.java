@@ -1,27 +1,25 @@
 package com.cargaia.consumer.face;
 
-import smile.classification.KNN;
-import smile.data.DataFrame;
-import smile.data.formula.Formula;
-import smile.data.type.StructType;
-import smile.data.type.DataTypes;
-import smile.data.vector.DoubleVector;
-import smile.io.Read;
-import smile.io.Write;
+// Smile imports commented out due to availability issues
+// import smile.classification.KNN;
+// import smile.data.DataFrame;
+// import smile.data.formula.Formula;
+// import smile.data.type.StructType;
+// import smile.data.type.DataTypes;
+// import smile.data.vector.DoubleVector;
+// import smile.io.Read;
+// import smile.io.Write;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Random;
 
 public class FaceAIProcessor {
     private static final Logger logger = LoggerFactory.getLogger(FaceAIProcessor.class);
     
-    private KNN<double[], String> model;
+    // Smile model commented out due to availability issues
+    // private KNN<double[], String> model;
     private boolean useSmile = false;
     private Random random = new Random();
 
@@ -48,13 +46,13 @@ public class FaceAIProcessor {
     }
 
     public String processFace(String imageUrl) {
-        if (useSmile && model != null) {
-            return processWithSmile(imageUrl);
-        } else {
-            return processWithPlaceholder(imageUrl);
-        }
+        // Smile temporarily disabled due to availability issues
+        // Always use placeholder for now
+        return processWithPlaceholder(imageUrl);
     }
 
+    // Smile processing commented out due to availability issues
+    /*
     private String processWithSmile(String imageUrl) {
         try {
             // Simula extração de features da imagem
@@ -71,6 +69,7 @@ public class FaceAIProcessor {
             return processWithPlaceholder(imageUrl);
         }
     }
+    */
 
     private String processWithPlaceholder(String imageUrl) {
         // Placeholder determinístico baseado no hash da URL

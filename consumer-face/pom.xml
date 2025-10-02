@@ -39,12 +39,14 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <!-- Smile ML Library -->
+        <!-- Smile ML Library - Commented out due to availability issues -->
+        <!--
         <dependency>
             <groupId>com.github.haifengl</groupId>
             <artifactId>smile-core</artifactId>
             <version>${smile.version}</version>
         </dependency>
+        -->
 
         <!-- Logging -->
         <dependency>
