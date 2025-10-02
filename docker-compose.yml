@@ -1,0 +1,73 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: pass
+    networks:
+      - app_net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  generator:
+    build: ./generator
+    container_name: generator
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: pass
+      EXCHANGE_NAME: img.topic
+      MSGS_PER_SEC: "6"
+    networks:
+      - app_net
+    restart: unless-stopped
+
+  consumer-face:
+    build: ./consumer-face
+    container_name: consumer-face
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: pass
+      EXCHANGE_NAME: img.topic
+      QUEUE_NAME: face.q
+      PROCESS_DELAY_MS: "900"
+    networks:
+      - app_net
+    restart: unless-stopped
+
+  consumer-team:
+    build: ./consumer-team
+    container_name: consumer-team
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: pass
+      EXCHANGE_NAME: img.topic
+      QUEUE_NAME: team.q
+      PROCESS_DELAY_MS: "1100"
+    networks:
+      - app_net
+    restart: unless-stopped
+
+networks:
+  app_net:
+    driver: bridge
