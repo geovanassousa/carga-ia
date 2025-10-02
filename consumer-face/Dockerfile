@@ -1,19 +1,11 @@
-FROM openjdk:17-jdk-slim
-
-WORKDIR /app
-
-# Copy pom.xml and download dependencies
+FROM maven:3.9.9-eclipse-temurin-17 AS build
+WORKDIR /build
 COPY pom.xml .
-RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
-
-# Download dependencies
-RUN mvn dependency:go-offline -B
-
-# Copy source code
+RUN mvn -q -B -DskipTests dependency:go-offline
 COPY src ./src
+RUN mvn -q -B -DskipTests clean package
 
-# Build the application
-RUN mvn clean package -DskipTests
-
-# Run the application
-CMD ["java", "-jar", "target/consumer-face-1.0.0.jar"]
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=build /build/target/consumer-face.jar /app/app.jar
+CMD ["java","-jar","/app/app.jar"]
