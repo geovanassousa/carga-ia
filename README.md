@@ -22,7 +22,7 @@ Exchange topic `img.topic` com bindings:
 
 ---
 
-# Como validar (rapidinho)
+# Como validar
 1. Na raiz:
    ```bash
    docker compose down -v
