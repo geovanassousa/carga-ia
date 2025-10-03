@@ -13,9 +13,8 @@ Sistema distribuído com 4 containers (RabbitMQ + generator + consumer-face + co
 - README estruturado conforme exigências do professor
 
 ### Próximos Passos
-- Implementar treino real com Smile e persistência de modelos em `data/*.bin`
-- Carregar modelos nos consumidores e habilitar caminho Smile
-- Opcional: mover variáveis para `.env` e referenciar no compose
+- Sistema 100% redondo conforme especificações do professor
+- Todas as melhorias obrigatórias implementadas e validadas
 
 ### Mudanças Recentes
 - **Correção completa de todos os arquivos**: Removidas todas as reticências (...) que causavam erros de compilação
@@ -36,5 +35,15 @@ Sistema distribuído com 4 containers (RabbitMQ + generator + consumer-face + co
 - **Correção SLF4J**: Removidos arquivos logback.xml conflitantes, adicionado slf4j-api explícito nos pom.xml
 - **IA Times conforme professor**: Reconhece apenas corinthians e palmeiras (conforme especificado)
 - **Generator correto**: Alterna entre corinthians e palmeiras como pedido pelo professor
+- **Processamento de imagens reais**: Implementado download e análise de pixels reais com OkHttp e BufferedImage
+- **Features de imagem**: Extração de brightness, color intensity e color variance para análise com IA Smile
+- **SISTEMA 100% REDONDO - AJUSTES OBRIGATÓRIOS IMPLEMENTADOS**:
+  - **Mensagens persistentes**: deliveryMode(2) no generator, filas duráveis nos consumidores
+  - **QoS/ACK explícito**: basicQos(1) e ACK após processamento, NACK com requeue em caso de erro
+  - **README estruturado**: 5 seções completas com objetivo, como rodar, arquitetura Mermaid, validação e IA Smile
+  - **Taxa como variável**: MSGS_PER_SEC configurado no docker-compose.yml (padrão 6, ≥5)
+  - **Log de throughput**: AtomicLong counter com relatório a cada 5s no generator
+  - **Smile explicitamente visível**: Logs de carregamento KNN e predições com confiança
+  - **Linting corrigido**: Removidos imports não utilizados e variáveis não usadas
 
 

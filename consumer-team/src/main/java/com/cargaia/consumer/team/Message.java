@@ -1,6 +1,5 @@
-package com.cargaia.generator;
+package com.cargaia.consumer.team;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Base64;
 
 public class Message {
     @JsonProperty("id") public String id;
@@ -10,11 +9,4 @@ public class Message {
     @JsonProperty("meta") public MessageMeta meta;
 
     public Message() {}
-    public Message(String id, String type, byte[] imageBytes, String timestamp, MessageMeta meta) {
-        this.id = id; 
-        this.type = type; 
-        this.imageBytes = Base64.getEncoder().encodeToString(imageBytes);
-        this.timestamp = timestamp; 
-        this.meta = meta;
-    }
 }
