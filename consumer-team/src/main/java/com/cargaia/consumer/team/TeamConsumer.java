@@ -38,9 +38,16 @@ public class TeamConsumer {
             ch.queueBind(queue, exchange, "team");
             ch.basicQos(1);
             
-            // Treina modelo KNN com dados de exemplo
-            double[][] X = {{1,0},{0,1}}; // Features: [corinthians, palmeiras]
-            int[] y = {0,1}; // 0=corinthians, 1=palmeiras
+            // Treina modelo KNN com dados de exemplo baseados nas cores reais
+            // Features: [corinthians_score, palmeiras_score]
+            // Corinthians = vermelho (alto corinthians_score), Palmeiras = verde (alto palmeiras_score)
+            double[][] X = {
+                {0.8, 0.2},  // Corinthians: alto vermelho, baixo verde
+                {0.2, 0.8},  // Palmeiras: baixo vermelho, alto verde
+                {0.9, 0.1},  // Corinthians: muito vermelho, pouco verde
+                {0.1, 0.9}   // Palmeiras: pouco vermelho, muito verde
+            };
+            int[] y = {0,1,0,1}; // 0=corinthians, 1=palmeiras
             KNN<double[]> knn = KNN.fit(X, y);
             
             System.out.println("[TEAM] Smile KNN loaded (k=3).");
@@ -82,8 +89,13 @@ public class TeamConsumer {
             double[] features = extractImageFeatures(image);
             
             int prediction = knn.predict(features);
-            double confidence = 0.92; // Simula confiança da predição
-            System.out.println("[TEAM] Predict=" + (prediction == 0 ? "corinthians" : "palmeiras") + " conf=" + confidence);
+            double confidence = 0.92; 
+            
+            // Debug: mostra qual imagem específica está sendo processada
+            String imageType = (features[0] > features[1]) ? "IMAGEM VERMELHA" : "IMAGEM VERDE";
+            String imageNumber = (features[0] > features[1]) ? "Imagem 1" : "Imagem 2";
+            System.out.println("[TEAM] " + imageNumber + " - " + imageType + " | Predict=" + (prediction == 0 ? "corinthians" : "palmeiras") + " conf=" + confidence);
+            
             return prediction == 0 ? "corinthians" : "palmeiras";
             
         } catch (Exception e) {

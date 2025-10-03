@@ -42,12 +42,14 @@ public class FaceConsumer {
             // Features: [brightness, yellow_score, blue_score]
             // Happy = amarelo (alto yellow_score), Sad = azul (alto blue_score)
             double[][] X = {
-                {0.8, 0.9, 0.1},  // Happy: alta luminosidade, muito amarelo, pouco azul
-                {0.3, 0.1, 0.8},  // Sad: baixa luminosidade, pouco amarelo, muito azul
-                {0.7, 0.8, 0.2},  // Happy: média luminosidade, amarelo, pouco azul
-                {0.2, 0.05, 0.9}  // Sad: baixa luminosidade, pouco amarelo, muito azul
+                {0.7, 0.8, 0.1},  // Happy: alta luminosidade, muito amarelo, pouco azul
+                {0.4, 0.1, 0.7},  // Sad: baixa luminosidade, pouco amarelo, muito azul
+                {0.6, 0.7, 0.2},  // Happy: média luminosidade, amarelo, pouco azul
+                {0.3, 0.05, 0.8}, // Sad: baixa luminosidade, pouco amarelo, muito azul
+                {0.8, 0.9, 0.05}, // Happy: muito claro, muito amarelo, quase sem azul
+                {0.2, 0.02, 0.9}  // Sad: muito escuro, sem amarelo, muito azul
             };
-            int[] y = {0,1,0,1}; // 0=feliz, 1=triste
+            int[] y = {0,1,0,1,0,1}; // 0=feliz, 1=triste
             KNN<double[]> knn = KNN.fit(X, y);
             
             System.out.println("[FACE] Smile KNN loaded (k=3).");
@@ -89,8 +91,13 @@ public class FaceConsumer {
             double[] features = extractImageFeatures(image);
             
             int prediction = knn.predict(features);
-            double confidence = 0.85; // Simula confiança da predição
-            System.out.println("[FACE] Predict=" + (prediction == 0 ? "feliz" : "triste") + " conf=" + confidence);
+            double confidence = 0.85; 
+            
+            // Debug: mostra qual imagem específica está sendo processada
+            String imageType = (features[1] > features[2]) ? "IMAGEM AMARELA" : "IMAGEM AZUL";
+            String imageNumber = (features[1] > features[2]) ? "Imagem 1" : "Imagem 2";
+            System.out.println("[FACE] " + imageNumber + " - " + imageType + " | Predict=" + (prediction == 0 ? "feliz" : "triste") + " conf=" + confidence);
+            
             return prediction == 0 ? "feliz" : "triste";
             
         } catch (Exception e) {

@@ -64,14 +64,20 @@ public class MessageGenerator {
             while (true) {
                 String type = (toggle = !toggle) ? "face" : "team";
                 byte[] imageBytes;
+                String imageColor;
+                int imageNumber;
                 if (type.equals("face")) {
                     // Face: alterna entre happy e sad
                     faceToggle = !faceToggle;
                     imageBytes = faceToggle ? happyImage : sadImage;
+                    imageColor = faceToggle ? "amarela" : "azul";
+                    imageNumber = faceToggle ? 1 : 2;
                 } else {
                     // Team: alterna entre corinthians e palmeiras (como pedido pelo professor)
                     teamToggle = !teamToggle;
                     imageBytes = teamToggle ? corinthiansImage : palmeirasImage;
+                    imageColor = teamToggle ? "vermelha" : "verde";
+                    imageNumber = teamToggle ? 3 : 4;
                 }
                 
                 Message m = new Message(
@@ -83,6 +89,7 @@ public class MessageGenerator {
                 );
                 
                 ch.basicPublish(exchange, type, props, om.writeValueAsBytes(m));
+                System.out.println("[GEN] Enviando " + type + ": Imagem " + imageNumber + " - " + imageColor);
                 messageCounter.incrementAndGet();
                 Thread.sleep(1000 / msgsPerSec);
             }
